@@ -1,0 +1,15 @@
+# Overlay de validação SEM LLM real: registra o adaptador determinístico
+# @agentor/llm-offline e seleciona-o como modelo padrão.
+# Usado por `pnpm smoke` e pelos testes e2e. Nunca use em produção.
+
+- insert:
+    - id: llm-offline
+      name: '@agentor/llm-offline'
+      config:
+        provider: offline
+        toolName: knowledge_search
+
+- id: agent-default-model
+  config:
+    provider: offline
+    model: offline-deterministico

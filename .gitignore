@@ -1,0 +1,9 @@
+node_modules/
+# Harness home local (profiles, sessões, logs) — gerado por scripts/setup-profile.mjs
+.dsh-home/
+# Variáveis reais de ambiente e chaves nunca entram no repositório
+.env
+.env.*
+!.env.example
+*.log
+coverage/

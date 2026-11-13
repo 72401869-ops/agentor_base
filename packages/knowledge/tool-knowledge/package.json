@@ -1,0 +1,21 @@
+{
+  "name": "@agentor/tool-knowledge",
+  "version": "0.1.0",
+  "description": "Tool knowledge_search: o modelo consulta a base de conhecimento do cliente",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "dsh": "0.2.2-rc.1"
+  },
+  "peerDependencies": {
+    "@agentor/knowledge": "workspace:*",
+    "@deepseek-ai/cordis": "4.1.0",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
+    "@deepseek-ai/schemastery": "3.19.0"
+  }
+}

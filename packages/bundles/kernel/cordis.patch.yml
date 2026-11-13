@@ -1,0 +1,88 @@
+# Kernel Agentor — composição POR INCLUSÃO.
+#
+# Este bundle NÃO herda de @deepseek-ai/dsh-base. Cada plugin que roda está
+# listado abaixo de forma explícita; uma atualização do DSH não consegue
+# adicionar plugins a esta árvore sem que alguém edite este arquivo.
+#
+# Fonte de referência: o bundle @deepseek-ai/dsh-sdk-minimal@0.2.2-rc.1 e o
+# runner de @deepseek-ai/dsh-headless@0.2.2-rc.1. Removidos em relação a eles:
+#   - todos os pacotes *-deepseek* (adaptador, extensões de API, log de sessão,
+#     inventário, conta) — o LLM entra por dsh-llm-pi-ai, configurado por cliente;
+#   - shell, terminal, filesystem, sandbox, subprocess e jobs — o estagiário
+#     conversa com o tutor; nenhuma ferramenta executa comandos na máquina;
+#   - servidor SDK JSON-RPC, MCP resources, compactação de imagem e anexos.
+# A lista completa e o motivo de cada linha estão em docs/arquitetura.md.
+
+- insert:
+    # ── Entrada headless: lê a tarefa da linha de comando e roda um turno ──
+    - id: headless-startup
+      name: '@deepseek-ai/dsh-headless/startup'
+
+    - id: headless-runner
+      name: '@deepseek-ai/dsh-headless'
+      inject: [headlessStartup]
+      config:
+        task: !!js ctx.headlessStartup.task
+        sessionId: !!js ctx.headlessStartup.sessionId
+        json: !!js ctx.headlessStartup.json
+
+    # ── Núcleo do agente ──
+    - id: timer
+      name: '@deepseek-ai/cordis-plugin-timer'
+
+    - id: llm
+      name: '@deepseek-ai/dsh-llm'
+
+    - id: llm-retry
+      name: '@deepseek-ai/dsh-llm-retry'
+
+    - id: session
+      name: '@deepseek-ai/dsh-session'
+
+    - id: session-projection
+      name: '@deepseek-ai/dsh-session-projection'
+
+    - id: system-prompt
+      name: '@deepseek-ai/dsh-system-prompt'
+      config:
+        includeHarnessIdentity: false
+        includeRuntimeContext: false
+        personaPrefix: 'Você é um assistente da empresa.'
+
+    - id: tools
+      name: '@deepseek-ai/dsh-tools'
+
+    - id: tool-executor-native
+      name: '@deepseek-ai/dsh-tool-executor-native'
+
+    - id: agent
+      name: '@deepseek-ai/dsh-agent'
+
+    - id: agent-loop
+      name: '@deepseek-ai/dsh-agent-loop'
+      config:
+        agents: []
+
+    # Modelo padrão dos agentes. O cliente sobrescreve provider/model no seu
+    # patch (config/clients/<cliente>/cordis.patch.yml).
+    - id: agent-default-model
+      name: '@deepseek-ai/dsh-agent-default-model'
+      config:
+        provider: nao-configurado
+        model: nao-configurado
+
+    # ── Provedor LLM agnóstico ──
+    # Começa sem rotas; cada cliente declara as suas. As chaves são
+    # referências (apiKeyEnv) resolvidas a cada requisição, então trocar a
+    # variável de ambiente troca a chave sem reiniciar a configuração.
+    - id: llm-pi-ai
+      name: '@deepseek-ai/dsh-llm-pi-ai'
+      config:
+        providers: {}
+
+    # ── Persistência das sessões (JSONL em $DSH_HOME/sessions) ──
+    - id: sessions
+      name: '@deepseek-ai/dsh-session-persistence-jsonl'
+      config:
+        root: !!js dshHomePath('sessions')
+        compression: none

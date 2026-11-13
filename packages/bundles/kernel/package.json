@@ -1,0 +1,21 @@
+{
+  "name": "@agentor/bundle-kernel",
+  "version": "0.1.0",
+  "description": "Kernel Agentor por inclusão: lista explícita de plugins DSH, sem pacotes DeepSeek",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": ["cordis.patch.yml"],
+  "engines": {
+    "dsh": "0.2.2-rc.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

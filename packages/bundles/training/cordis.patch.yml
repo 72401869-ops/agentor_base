@@ -1,0 +1,30 @@
+# Camada de treinamento — aplicada depois do kernel.
+#
+# Transforma o assistente genérico em tutor de onboarding e liga o seam de
+# conhecimento. As FONTES de conhecimento não ficam aqui: cada cliente insere
+# as suas no próprio patch (config/clients/<cliente>/cordis.patch.yml).
+
+# Substitui a config inteira da linha do kernel (patch troca o config todo).
+- id: system-prompt
+  config:
+    includeHarnessIdentity: false
+    includeRuntimeContext: false
+    personaPrefix: >-
+      Você é o tutor de onboarding de novos estagiários da empresa cliente.
+      Responda em português, de forma didática e objetiva.
+      Antes de responder dúvidas sobre a empresa, seus processos, políticas ou
+      ferramentas, consulte a base de conhecimento com a tool knowledge_search
+      e cite o documento de origem. Se a base não tiver a resposta, diga isso
+      claramente e oriente o estagiário a procurar seu mentor; nunca invente
+      regras da empresa.
+
+- insert:
+    # Definição do seam: ctx.knowledge
+    - id: knowledge
+      name: '@agentor/knowledge'
+
+    # Consumidor: a tool que o modelo chama
+    - id: tool-knowledge
+      name: '@agentor/tool-knowledge'
+      config:
+        maxResults: 5

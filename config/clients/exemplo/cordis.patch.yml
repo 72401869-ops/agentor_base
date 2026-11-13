@@ -1,0 +1,44 @@
+# Cliente "exemplo" — modelo para configurar um cliente novo.
+#
+# NENHUM VALOR SECRETO AQUI. Chaves de LLM são REFERÊNCIAS (apiKeyEnv): o nome
+# de uma variável de ambiente que o pi-ai lê a cada requisição. O valor real
+# fica fora do repositório (export no shell, ou $DSH_HOME/.env — veja
+# config/.env.example).
+#
+# Copie esta pasta para config/clients/<cliente>/ e ajuste:
+#   1. a rota LLM do cliente (llm-pi-ai) e o modelo padrão (agent-default-model);
+#   2. as fontes de conhecimento do cliente (linhas knowledge-*).
+
+# 1a. Rotas de LLM do cliente. Exemplos de três formatos; mantenha só o que o
+#     cliente usa. Um patch substitui o config inteiro da linha.
+- id: llm-pi-ai
+  config:
+    providers:
+      # Provedor do catálogo do pi-ai (openai, anthropic, google, ...)
+      openai:
+        apiKeyEnv: AGENTOR_EXEMPLO_OPENAI_KEY
+      # Gateway compatível com OpenAI hospedado pelo cliente
+      exemplo-gateway:
+        displayName: Gateway do cliente exemplo
+        api: openai-completions
+        baseURL: https://llm.cliente-exemplo.invalid/v1
+        apiKeyEnv: AGENTOR_EXEMPLO_GATEWAY_KEY
+        models:
+          - id: modelo-do-cliente
+            contextWindow: 128000
+
+# 1b. Qual rota/modelo os agentes usam por padrão.
+- id: agent-default-model
+  config:
+    provider: openai
+    model: gpt-4.1-mini
+
+# 2. Fontes de conhecimento do cliente. Cada linha é um provider registrando
+#    uma fonte em ctx.knowledge; um cliente pode ter várias.
+- insert:
+    - id: knowledge-exemplo-manual
+      name: '@agentor/knowledge-fs'
+      config:
+        id: exemplo-manual
+        description: Manual do estagiário e políticas internas do cliente exemplo
+        root: !!js "process.env.AGENTOR_CLIENT_DIR + '/conhecimento'"
