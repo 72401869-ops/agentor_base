@@ -326,7 +326,7 @@ Validação: os passos 1 a 3 passam; no passo 4, a normalização resulta em `..
 Error: [OUTSIDE_SCOPE] "../cordis.patch.yml" está fora do escopo autorizado da fonte "exemplo-manual". Nada foi lido.
 ```
 
-A mesma recusa vale para `conhecimento/../../cordis.patch.yml`, `..\\cordis.patch.yml` e para um link simbólico ou *junction* dentro de `conhecimento/` que aponte para fora (passo 5).
+A mesma recusa vale para `sub/../../cordis.patch.yml`, `..\cordis.patch.yml` e para um link simbólico ou *junction* dentro de `conhecimento/` que aponte para fora (passo 5).
 
 ### (C) Fonte não autorizada
 
