@@ -37,6 +37,17 @@ async function workspacePackages() {
   return found
 }
 
+/**
+ * Cria um link de diretório. No Windows, um link simbólico exige privilégio
+ * (Modo de Desenvolvedor ou administrador) e falha com EPERM; uma junction
+ * não exige, mas só aceita alvo absoluto. Nos demais sistemas o link é
+ * relativo, para o profile continuar válido se o repositório mudar de lugar.
+ */
+async function linkDir(target, link) {
+  if (process.platform === 'win32') await symlink(target, link, 'junction')
+  else await symlink(relative(dirname(link), target), link, 'dir')
+}
+
 export async function setupProfile({ quiet = false } = {}) {
   const home = dshHome()
   const profileDir = join(home, 'profiles', PROFILE)
@@ -63,13 +74,14 @@ export async function setupProfile({ quiet = false } = {}) {
   const userPatch = join(profileDir, 'cordis.patch.yml')
   if (!existsSync(userPatch)) await writeFile(userPatch, '[]\n')
 
-  // node_modules do profile: links para os pacotes do repositório.
+  // node_modules do profile: links para os pacotes do repositório. O rm
+  // remove só os links, nunca o conteúdo para o qual eles apontam.
   const scopeDir = join(profileDir, 'node_modules', '@agentor')
   await rm(scopeDir, { recursive: true, force: true })
   await mkdir(scopeDir, { recursive: true })
   for (const [name, dir] of packages) {
     const link = join(profileDir, 'node_modules', name)
-    await symlink(relative(dirname(link), dir), link, 'dir')
+    await linkDir(dir, link)
   }
 
   if (!quiet) {

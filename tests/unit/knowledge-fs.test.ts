@@ -31,6 +31,33 @@ describe('knowledge-fs: funções puras', () => {
     assert.deepEqual(chunksOf('# Férias\n\n## Pedido\ntexto'), ['# Férias\n\n## Pedido\ntexto'])
     assert.deepEqual(chunksOf('# Só título'), ['# Só título'])
   })
+
+  it('aceita finais de linha CRLF (documentos criados no Windows)', () => {
+    assert.deepEqual(chunksOf('# A\r\ntexto a\r\n\r\n## B\r\ntexto b'), ['# A\r\ntexto a', '## B\r\ntexto b'])
+    assert.deepEqual(chunksOf('um\r\n\r\ndois'), ['um', 'dois'])
+    assert.deepEqual(chunksOf('# Férias\r\n\r\n## Pedido\r\ntexto'), ['# Férias\n\n## Pedido\r\ntexto'])
+  })
+})
+
+describe('knowledge-fs: documento com CRLF', () => {
+  let root: string
+
+  before(async () => {
+    root = await mkdtemp(join(tmpdir(), 'agentor-kfs-crlf-'))
+    await writeFile(join(root, 'cracha.md'), '# Crachá\r\n\r\n## Retirada\r\nO crachá é retirado na recepção no primeiro dia.\r\n')
+  })
+
+  after(async () => {
+    await rm(root, { recursive: true, force: true })
+  })
+
+  it('devolve título e trecho sem caracteres de retorno de carro', async () => {
+    const source = createFsSource({ id: 'crlf', description: 'docs CRLF', root, extensions: ['.md'], maxExcerptChars: 200 })
+    const [hit] = await source.search({ text: 'onde retirar o crachá', limit: 5 })
+    assert.ok(hit)
+    assert.equal(hit.title, 'Crachá')
+    assert.equal(hit.excerpt, '# Crachá ## Retirada O crachá é retirado na recepção no primeiro dia.')
+  })
 })
 
 describe('knowledge-fs: fonte em pasta', () => {
