@@ -91,7 +91,7 @@ Levantamento feito no código-fonte do DSH:
 | `@agentor/tool-knowledge` | Consumidor: tool `knowledge_search`, com citação da fonte |
 | `@agentor/llm-offline` | Adaptador LLM determinístico, sem rede, para smoke tests. Não é um modelo. |
 
-Os plugins são TypeScript e rodam sem etapa de build: o Node executa `.ts` com *type stripping* (apenas sintaxe apagável; verificada por `erasableSyntaxOnly` no `tsconfig.json`). Os pacotes do workspace são carregados por links simbólicos a partir do profile, e o pnpm deduplica o `@deepseek-ai/cordis` e o `@deepseek-ai/dsh-llm`, de modo que plugins do Agentor e do DSH compartilham as mesmas instâncias.
+Os plugins são TypeScript e rodam sem etapa de build: o Node executa `.ts` com *type stripping* (apenas sintaxe apagável; verificada por `erasableSyntaxOnly` no `tsconfig.json`). Os pacotes do workspace são carregados por links a partir do profile (link simbólico no Linux e no macOS, *junction* no Windows, que não exige privilégio), e o pnpm deduplica o `@deepseek-ai/cordis` e o `@deepseek-ai/dsh-llm`, de modo que plugins do Agentor e do DSH compartilham as mesmas instâncias.
 
 ## Política de versões do DSH
 

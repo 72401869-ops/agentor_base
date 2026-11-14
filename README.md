@@ -14,8 +14,10 @@ Em vez de fazer fork do DSH, o Agentor **consome os pacotes publicados do DSH co
 
 | Item | Versão | Observação |
 |---|---|---|
-| Node.js | **≥ 24.9.0** (validado com 24.22.1) | Exigência declarada pelo `@deepseek-ai/dsh` (`engines`). O repositório usa o *type stripping* nativo do Node para rodar TypeScript sem build. |
-| pnpm | 10.28.0 | Declarado em `packageManager`. Com corepack: `corepack enable`. |
+| Sistema | Linux ou Windows | Validado em Linux (container) e em Windows 11 com PowerShell. No Windows não é preciso Modo de Desenvolvedor nem terminal de administrador. |
+| Node.js | **≥ 24.9.0** (validado com 24.14.0 e 24.22.1) | Exigência declarada pelo `@deepseek-ai/dsh` (`engines`). O repositório usa o *type stripping* nativo do Node para rodar TypeScript sem build. |
+| pnpm | 10.28.0 | Declarado em `packageManager`. Instale com `npm install -g pnpm@10.28.0` ou, com corepack, `corepack enable`. |
+| Git | qualquer recente | O `.gitattributes` mantém os arquivos com final de linha LF em qualquer sistema. |
 | Rede | registro npm | Só na instalação. A execução `--offline` não usa rede. |
 | Chave de LLM | uma por cliente | Só para o modo com LLM real. Veja [docs/clientes.md](docs/clientes.md). |
 
@@ -29,7 +31,9 @@ pnpm install --frozen-lockfile
 pnpm setup:profile
 ```
 
-O segundo comando cria o profile DSH `agentor` em `.dsh-home/` (ignorado pelo git). O profile lista os bundles `@agentor/bundle-kernel` → `@agentor/bundle-training` e aponta, por links, para os pacotes deste repositório. Ele também roda automaticamente a cada execução do lançador.
+O segundo comando cria o profile DSH `agentor` em `.dsh-home/` (ignorado pelo git). O profile lista os bundles `@agentor/bundle-kernel` → `@agentor/bundle-training` e aponta, por links, para os pacotes deste repositório (link simbólico no Linux e no macOS, *junction* no Windows). Ele também roda automaticamente a cada execução do lançador.
+
+Os comandos deste README são os mesmos no bash e no PowerShell.
 
 ## Execução
 
@@ -67,7 +71,7 @@ pnpm verify
 
 Roda `pnpm typecheck` (TypeScript estrito) e `pnpm test`. Os testes ficam em `tests/`:
 
-- `tests/unit/`: o seam `ctx.knowledge` sobre um `Context` real do Cordis, o provider de arquivos, a tool `knowledge_search` no pipeline real de tools do DSH e o adaptador offline.
+- `tests/unit/`: o seam `ctx.knowledge` sobre um `Context` real do Cordis, o provider de arquivos (inclusive documentos com CRLF), a tool `knowledge_search` no pipeline real de tools do DSH, o adaptador offline e a criação do profile.
 - `tests/e2e/`: sobem o `dsh` publicado com um `DSH_HOME` temporário. Inclui o teste de política **"nenhum pacote DeepSeek na árvore composta"**, que falha se uma mudança reintroduzir um plugin específico da DeepSeek.
 
 ## Estrutura
@@ -95,12 +99,14 @@ As dependências estão registradas em `package.json` (raiz e pacotes) e travada
 
 | Sintoma | Causa | O que fazer |
 |---|---|---|
-| `pnpm` avisa `Unsupported engine` | Node < 24.9 | Use Node 24 (`.nvmrc`). Neste container: `export PATH=/opt/node24/bin:$PATH`. O smoke offline chegou a rodar com Node 22.23, mas essa versão fica fora do suporte declarado pelo DSH e não é validada. |
+| `pnpm` avisa `Unsupported engine` | Node < 24.9 | Use Node 24 (`.nvmrc`). Com nvm ou nvm-windows: `nvm install 24` e `nvm use 24`. Node 22 fica fora do suporte declarado pelo DSH e não é validado. |
+| `setup falhou: EPERM: operation not permitted, symlink ...` (Windows) | Versão antiga do `scripts/setup-profile.mjs`, que criava link simbólico; no Windows isso exige Modo de Desenvolvedor ou administrador | Atualize o repositório: o setup atual cria *junctions*, que não exigem privilégio. |
 | `dsh: MISSING_CREDENTIAL: llm-pi-ai: no credential for provider route "openai"; its profile resolves AGENTOR_EXEMPLO_OPENAI_KEY, which is not set` | A variável citada em `apiKeyEnv` não existe no ambiente | Exporte a variável ou coloque-a em `.dsh-home/.env` (modelo em `config/.env.example`). Para validar sem chave, use `--offline`. |
 | `dsh: AUTH: Connection error.: Proxy response (403) !== 200 when HTTP Tunneling` | A rede bloqueia o host do provedor (visto neste container, que só libera registros de pacotes) | Libere o host do provedor na política de rede, ou use um gateway acessível na rota do cliente. |
 | `failed to parse overlay ... cannot resolve a node with !<tag:yaml.org,2002:js> explicit tag` | Expressão `!!js` sem aspas começando com crase ou outro caractere reservado do YAML | Coloque a expressão entre aspas: `root: !!js "process.env.AGENTOR_CLIENT_DIR + '/conhecimento'"`. |
 | `erro: cliente não encontrado: config/clients/<x>/cordis.patch.yml` (código 2) | `--client` aponta para uma pasta que não existe | Crie o cliente a partir de `config/clients/exemplo/` ([docs/clientes.md](docs/clientes.md)). |
-| Aviso do pnpm `Ignored build scripts: @google/genai, koffi, protobufjs` | Dependências transitivas do DSH com scripts de build nativo | Inofensivo: o kernel não usa esses recursos. Não aprove os scripts sem necessidade. |
+| Aviso do pnpm `Ignored build scripts: ...` (a lista varia por sistema: `@google/genai`, `koffi`, `protobufjs`; no Windows também `node-pty` e `@deepseek-ai/dsh-subprocess-local`) | Dependências transitivas do DSH com scripts de build nativo | Inofensivo: o kernel não usa esses recursos. Não aprove os scripts sem necessidade. |
+| Git avisa `CRLF will be replaced by LF` (Windows) | Cópia de trabalho criada antes do `.gitattributes`, com `core.autocrlf=true` | Inofensivo: o repositório guarda LF. Um clone novo já vem em LF. |
 | `dsh: skipping profile bundle "@agentor/bundle-kernel": ... is incompatible with dsh <versão>` seguido de `entries did not activate ... pending`; o processo sai com **código 0** e sem resposta | A versão do `@deepseek-ai/dsh` instalada não satisfaz o `engines.dsh` dos pacotes `@agentor/*` | Reinstale a versão travada (`pnpm install --frozen-lockfile`) ou siga o procedimento de atualização em [docs/arquitetura.md](docs/arquitetura.md#política-de-versões-do-dsh). |
 | Uma linha nova no patch parece não ter efeito | Nome de módulo errado: o loader do Cordis registra no logger e não derruba o processo | Confira com `pnpm dump-config --client <x>` e revise a grafia do `name`. |
 

@@ -16,6 +16,12 @@ O lançador aplica esse patch por cima dos bundles kernel e training (veja [arqu
 cp -r config/clients/exemplo config/clients/acme
 ```
 
+No PowerShell:
+
+```powershell
+Copy-Item -Recurse config/clients/exemplo config/clients/acme
+```
+
 O nome do cliente aceita letras minúsculas, números e hífen.
 
 ## 2. Provedor de LLM e chaves
@@ -51,7 +57,7 @@ A linha `llm-pi-ai` declara as rotas de LLM do cliente. Um patch **substitui o `
 
 Onde colocar o valor, em ordem de precedência:
 
-1. Variável exportada no shell ou no ambiente do serviço (o ambiente herdado vence).
+1. Variável exportada no shell ou no ambiente do serviço (o ambiente herdado vence). No bash: `export AGENTOR_ACME_ANTHROPIC_KEY=...`; no PowerShell: `$env:AGENTOR_ACME_ANTHROPIC_KEY = '...'` (vale só para aquela janela).
 2. `.dsh-home/.env`: crie a partir de [`config/.env.example`](../config/.env.example). O arquivo é ignorado pelo git.
 
 > Nunca commite um `.env` real nem escreva uma chave em `cordis.patch.yml`. Os nomes reservados pelo DSH (`DSH_*`, `PATH`, `XDG_*`) são recusados quando vêm de arquivos `.env`.
