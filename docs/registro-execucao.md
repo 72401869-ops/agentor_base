@@ -183,3 +183,69 @@ Varredura de segredos nos 38 arquivos versionados (exceto o lockfile), com padr�
 - **Chamada a um LLM real continua não validada.** Por política, não há chave no repositório, e nenhuma foi configurada nesta máquina. Fica para a integração com um provedor real.
 - **Acentos no stderr capturado pelo Windows PowerShell 5.1.** Ao redirecionar a saída de erro do `node` para arquivo, o PowerShell 5.1 decodifica os acentos com a página de código do console (por exemplo, `n�o` em vez de `não`). A mensagem do Agentor está correta; o efeito é só da captura. O stdout das respostas sai correto.
 - **Reprodução por outra pessoa:** pendente. O roteiro está em [entregas/19-ambiente-minimo.md](entregas/19-ambiente-minimo.md).
+
+## 2026-11-14 — Atualização do DSH para 0.2.2-rc.2
+
+Objetivo: usar a mesma versão do DSH avaliada na escolha da base (tag `dsh-v0.2.2-rc.2`, commit `ddac9676`). Até aqui o repositório usava a `0.2.2-rc.1`, que era a dist-tag `latest` do npm. Mesmo ambiente da seção anterior (Windows 11, Node 24.14.0, pnpm 10.28.0).
+
+### Levantamento antes da troca
+
+| Verificação | Resultado |
+|---|---|
+| `cordis.patch.yml` do `dsh-sdk-minimal` e do `dsh-headless` (referências do kernel), rc.1 × rc.2 | **Idênticos**: a lista do kernel não muda |
+| Os 13 pacotes `@deepseek-ai/dsh-*` usados pelo kernel | Todos publicados na rc.2 |
+| Faixas de `cordis` (`~4.1.0`), `schemastery` (`~3.19.0`), `cordis-plugin-timer` (`~1.2.0`) e pi-ai (`^1.3.0`) | Iguais às da rc.1 |
+| `engines.node` | `>=24.9.0` nas duas |
+| Guia de upgrade `docs/upgrade-guide/v0.2.2-rc.2/` no repositório do DSH | Não existe (o último é o da rc.1, versão que já usávamos) |
+
+### Troca e problema encontrado
+
+Versões trocadas de rc.1 para rc.2 em `package.json`, nos `engines.dsh` e nas `peerDependencies` dos pacotes `@agentor/*`. No `cordis.patch.yml` do kernel, só o comentário de referência mudou.
+
+O primeiro `pnpm install`, feito sobre o lockfile antigo, terminou com código 0, mas deixou **34 pacotes do DSH em rc.1** e avisou `unmet peer @deepseek-ai/dsh-scope@0.2.2-rc.2: found 0.2.2-rc.1`. Os pacotes rc.2 declaram as peers em versão exata, mas o pnpm reaproveitou as resoluções antigas, inclusive um segundo `dsh-llm` em rc.1. Nem `pnpm update -r --depth Infinity "@deepseek-ai/*"` nem `pnpm dedupe` resolveram (o `dedupe` piorou).
+
+Correção: apagar o `pnpm-lock.yaml` e os `node_modules` e rodar `pnpm install`. Os `node_modules` também precisam sair, porque o pnpm reaproveita o lockfile interno de `node_modules/.pnpm`. Resultado:
+
+- nenhum pacote `@deepseek-ai/*` em rc.1 e nenhum `unmet peer` do DSH;
+- terceiros: 344 antes e 344 depois, com uma única diferença, `zod` 4.4.3 → 4.6.6;
+- `@earendil-works/pi-ai` continua 1.5.2 e `@anthropic-ai/claude-agent-sdk` continua ausente;
+- os 5 avisos restantes são `unmet peer @opentelemetry/api` sob o `@deepseek-ai/dsh-otel`, que não está no kernel. O `@opentelemetry/api` 1.10.0 já estava no lockfile da rc.1.
+
+O procedimento de atualização em [arquitetura.md](arquitetura.md#política-de-versões-do-dsh) ganhou um passo para essa conferência.
+
+### Bateria em clone limpo (commit `c50a412`, caminho com espaço)
+
+| # | Verificação | Resultado |
+|---|---|---|
+| B1 | `pnpm install --frozen-lockfile` | **ok** (42,2s) |
+| B2 | `pnpm setup:profile` 2×, junctions | **ok**: 6/6; `packages\` intacto |
+| B3 | `pnpm typecheck` | **ok** |
+| B4 | `pnpm test:unit` | **ok**: 21/21 |
+| B5 | `pnpm test:e2e` | **ok**: 5/5 |
+| B6 | `pnpm smoke` | **ok**, cita `manual-do-estagiario.md` |
+| B7 | `--json` | **ok**: 11 linhas JSON válidas |
+| B8 | `pnpm dump-config --client exemplo` | **ok**: 18 plugins, nenhum específico da DeepSeek |
+| B9 | Negativos | **ok**: códigos 2 / 2 / 2 / 1 |
+| V1 | Versão instalada do `@deepseek-ai/dsh` | `0.2.2-rc.2` |
+| V2 | `0.2.2-rc.1` no `pnpm-lock.yaml` | 0 ocorrências |
+| V3 | `skipping profile bundle` nas saídas | Ausente |
+| V4 | `dump-config` rc.2 × rc.1 | Mesmos 18 plugins e mesmas configurações; muda só o caminho do patch do cliente no comentário |
+
+Na cópia de trabalho original: `pnpm verify` com 26 testes, 26 passaram; `pnpm smoke` **ok**.
+
+### Teste com LLM real (Gemini)
+
+Patch local `.dsh-home/gemini.patch.yml` (rota `google`, modelo `gemini-3.5-flash-lite`) e chave em `.dsh-home/.env`, conforme o roteiro do `config/.env.example`:
+
+| Pergunta | Tempo | Resultado |
+|---|---|---|
+| "Como funciona o ponto eletrônico?" | 8s | Chamou `knowledge_search` e respondeu citando `manual-do-estagiario.md` |
+| "Qual é o plano de saúde dos estagiários?" | 6s | Chamou `knowledge_search` e respondeu que a base não tem a informação, orientando procurar o mentor |
+
+O log das duas sessões registra `"provider":"google"` e `"model":"gemini-3.5-flash-lite"`, sem retentativas.
+
+Observações do mesmo dia, ainda na rc.1:
+
+- O `gemini-2.5-flash` foi recusado pelo Google com 404, por não estar mais disponível para novos usuários.
+- O `gemini-3.8-flash` ficou 300s sem resposta (`stream idle timeout`) e depois recebeu 503 ("high demand") nas retentativas. Com o *idle timeout* de 300s e até 5 retentativas, uma chamada pode ficar presa por mais de 25 minutos. O tema fica para os limites de execução.
+- Na pergunta sobre plano de saúde, a busca lexical devolveu trechos sem relação ("plano de estudos" e o título de um documento). O modelo não usou esses trechos como resposta.

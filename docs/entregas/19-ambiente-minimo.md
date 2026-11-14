@@ -66,9 +66,12 @@ Registre sistema, versões e resultado em [registro-execucao.md](../registro-exe
 
 Apenas para referência; nenhum destes itens foi tratado aqui:
 
-- Chamada a um LLM real com pergunta conhecida e sem resposta.
+- Chamada a um LLM real com pergunta conhecida e sem resposta. Um teste adicional com o Gemini já foi feito e registrado (veja abaixo), mas a integração com o provedor escolhido pelo projeto continua fora desta task.
 - CI com testes e busca de segredos.
 - Registro de decisão com licenças (SBOM).
-
-Resolvido depois da entrega: a versão do DSH usada (0.2.2-rc.1) foi alinhada à avaliada na escolha da base (0.2.2-rc.2) em 14/11/2026 ([registro de execução](../registro-execucao.md)).
 - Especificação e implementação da tool de leitura de arquivo.
+
+Depois da entrega, em 14/11/2026 ([registro de execução](../registro-execucao.md#2026-11-14--atualização-do-dsh-para-022-rc2)):
+
+- a versão do DSH usada (0.2.2-rc.1) foi alinhada à avaliada na escolha da base (0.2.2-rc.2);
+- um teste com LLM real (Gemini, `gemini-3.5-flash-lite`) respondeu a pergunta conhecida citando a fonte e a pergunta sem resposta declarando a ausência.
