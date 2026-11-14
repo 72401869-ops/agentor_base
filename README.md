@@ -8,7 +8,7 @@ Em vez de fazer fork do DSH, o Agentor **consome os pacotes publicados do DSH co
 - As chaves de LLM são **referências a variáveis de ambiente**, resolvidas a cada requisição. Nenhuma chave fica no repositório.
 - A primeira superfície é **headless (CLI)**. A interface Web é a etapa seguinte (veja [docs/roadmap.md](docs/roadmap.md)).
 
-> **Estado:** ambiente mínimo validado (headless + base de conhecimento + LLM offline). O DSH está em *developer preview* e pode trazer mudanças incompatíveis; por isso a versão é fixada. Veja [docs/registro-execucao.md](docs/registro-execucao.md).
+> **Estado:** ambiente mínimo validado em Linux e Windows (headless + base de conhecimento + LLM offline). O DSH está em *developer preview* e pode trazer mudanças incompatíveis; por isso a versão é fixada. Veja [docs/registro-execucao.md](docs/registro-execucao.md).
 
 ## Pré-requisitos
 
@@ -90,7 +90,7 @@ config/                   configuração (sem segredos)
   .env.example            nomes das variáveis de chave, sem valores
 scripts/                  lançador e criação do profile
 tests/                    testes unitários e e2e
-docs/                     arquitetura, clientes, registro de execução, roadmap
+docs/                     arquitetura, clientes, registro de execução, roadmap, entregas
 ```
 
 As dependências estão registradas em `package.json` (raiz e pacotes) e travadas em `pnpm-lock.yaml`. Os pacotes do DSH usam **versão exata** (`0.2.2-rc.1`).
@@ -116,6 +116,7 @@ As dependências estão registradas em `package.json` (raiz e pacotes) e travada
 - [docs/clientes.md](docs/clientes.md): como configurar um cliente (LLM, chaves, fontes de conhecimento).
 - [docs/registro-execucao.md](docs/registro-execucao.md): comandos executados, resultados e impedimentos.
 - [docs/roadmap.md](docs/roadmap.md): próximos plugins de treinamento e a etapa Web.
+- [docs/entregas/](docs/entregas/19-ambiente-minimo.md): evidências de cada entrega, por critério de aceite (começando pela #19, ambiente mínimo).
 
 ## Licença
 
