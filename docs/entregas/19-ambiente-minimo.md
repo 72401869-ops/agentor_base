@@ -55,7 +55,7 @@ Registre sistema, versões e resultado em [registro-execucao.md](../registro-exe
 
 | Campo | Valor |
 |---|---|
-| Responsável | |
+| Responsável | [FelipeVandevelde](https://github.com/FelipeVandevelde) |
 | Revisor | |
 | Dependências e alternativa com dados simulados | Depende dos pacotes npm do DSH 0.2.2-rc.2, a versão avaliada na escolha da base. Sem chave de LLM, a alternativa é o adaptador `llm-offline` com os documentos fictícios do cliente `exemplo`. |
 | Dados utilizados e risco | Somente documentos fictícios. Risco baixo: nenhuma credencial nem dado pessoal no repositório. |

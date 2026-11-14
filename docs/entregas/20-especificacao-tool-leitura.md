@@ -59,7 +59,7 @@ Respostas esperadas, para conferência do revisor depois do passo 3:
 
 | Campo | Valor |
 |---|---|
-| Responsável | |
+| Responsável | [FelipeVandevelde](https://github.com/FelipeVandevelde) |
 | Revisor | |
 | Dependências e alternativa com dados simulados | Nenhuma dependência externa: é um documento. Os exemplos usam os documentos fictícios do cliente `exemplo`; os exemplos de fontes remotas são ilustrativos, com ids inventados |
 | Dados utilizados e risco | Somente documentos fictícios. Risco baixo: nenhuma credencial, nenhum dado pessoal, nenhum código executável alterado |
