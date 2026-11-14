@@ -89,6 +89,7 @@ Cada fonte é uma linha inserida que aponta para um **provider**. Um cliente pod
 
 - Expressões `!!js` precisam estar **entre aspas** quando começam com um caractere reservado do YAML, como a crase.
 - Hoje existe só o provider de arquivos (`@agentor/knowledge-fs`). Fontes como Confluence, Drive, banco de dados ou um servidor MCP entram como novos pacotes `@agentor/knowledge-*` que implementam o mesmo contrato `KnowledgeSource`, sem mudança na tool nem na persona ([roadmap](roadmap.md)).
+- **Estas fontes são a lista de fontes autorizadas do cliente.** A futura tool de leitura integral de documentos (`read_document`) só lê das fontes declaradas aqui, cada uma dentro do próprio escopo (a pasta `root`, a pasta vinculada do Drive, a coleção do banco). Detalhes e regras por tipo de fonte na [especificação](especificacoes/tool-read-document.md).
 
 ## 4. Validar
 

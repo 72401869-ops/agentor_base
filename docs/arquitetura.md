@@ -19,12 +19,14 @@ Toda capacidade trocável tem três papéis, normalmente em pacotes separados:
 | Papel | No seam de conhecimento do Agentor |
 |---|---|
 | **Definição** (o serviço e seu contrato) | `@agentor/knowledge` → `ctx.knowledge` |
-| **Provider** (implementação) | `@agentor/knowledge-fs` (pasta de documentos); futuros: MCP, HTTP, banco |
-| **Consumidor** (normalmente uma tool) | `@agentor/tool-knowledge` → tool `knowledge_search` |
+| **Provider** (implementação) | `@agentor/knowledge-fs` (pasta de documentos); futuros: OneDrive, Google Drive, banco de documentos, banco vetorial, MCP, HTTP |
+| **Consumidor** (normalmente uma tool) | `@agentor/tool-knowledge` → tool `knowledge_search`; especificado: `@agentor/tool-read-document` → tool `read_document` |
 
 Provider e consumidor não se conhecem. Um cliente com dados no Confluence ganha um provider novo, e a tool e a persona não mudam.
 
 `ctx.knowledge` é um **registro**: cada provider registra uma ou mais fontes, e `search()` consulta todas em paralelo, ordena por relevância e isola falhas. Uma fonte fora do ar vira um aviso no resultado e não derruba a busca. O registro é desfeito automaticamente quando o provider descarrega (`this.ctx.effect`, o mesmo padrão do `ctx.llm.registerAdapter` do DSH).
+
+As fontes registradas em `ctx.knowledge` são também a **lista de fontes autorizadas** do cliente para leitura integral de documentos. A [especificação da tool `read_document`](especificacoes/tool-read-document.md) estende o contrato com a operação opcional `read(documentId)` e define as regras de escopo de cada tipo de fonte. A implementação está prevista para a task #41.
 
 ## Camadas de composição
 
@@ -67,7 +69,7 @@ O kernel **não herda** de `@deepseek-ai/dsh-base`, que tem cerca de 90 linhas e
 | Removido | Motivo |
 |---|---|
 | `dsh-llm-deepseek*`, `dsh-deepseek-llm-api-extensions`, `dsh-session-log-deepseek`, `dsh-plugin-package-inventory-deepseek`, `dsh-deepseek-account`, `dsh-web-search-deepseek`, `dsh-web-deepseek-api` | Específicos da DeepSeek. O provedor de LLM varia por cliente e entra pelo `llm-pi-ai`. |
-| Shell, terminal, filesystem, sandbox, subprocess, jobs | O estagiário conversa com um tutor; nenhuma tool executa comandos ou escreve arquivos na máquina. Se um cliente precisar de exercícios práticos, a capacidade entra num bundle opcional, com sandbox. |
+| Shell, terminal, filesystem, sandbox, subprocess, jobs | O estagiário conversa com um tutor; nenhuma tool executa comandos ou escreve arquivos na máquina. Se um cliente precisar de exercícios práticos, a capacidade entra num bundle opcional, com sandbox. A leitura de documentos não usa o `dsh-tool-fs`: fica restrita às fontes autorizadas do cliente, por uma tool própria ([especificação](especificacoes/tool-read-document.md)). |
 | Servidor SDK JSON-RPC, ACP, Web app | Fora da primeira superfície (headless). A Web é a próxima etapa ([roadmap](roadmap.md)). |
 | Credenciais interativas e autorização | No headless a chave vem do ambiente a cada requisição ([clientes](clientes.md)). |
 | Subagentes, times, workflows, goal, schedule, compactação, MCP | Não são necessários no mínimo validável. Vários deles voltam como base dos plugins de treinamento ([roadmap](roadmap.md)). |
@@ -90,6 +92,7 @@ Levantamento feito no código-fonte do DSH:
 | `@agentor/knowledge-fs` | Provider: documentos `.md`/`.txt` de uma pasta, busca por termos e seções |
 | `@agentor/tool-knowledge` | Consumidor: tool `knowledge_search`, com citação da fonte |
 | `@agentor/llm-offline` | Adaptador LLM determinístico, sem rede, para smoke tests. Não é um modelo. |
+| `@agentor/tool-read-document` | **Especificado, não implementado** ([especificação](especificacoes/tool-read-document.md)): tool `read_document`, leitura integral de documentos das fontes autorizadas |
 
 Os plugins são TypeScript e rodam sem etapa de build: o Node executa `.ts` com *type stripping* (apenas sintaxe apagável; verificada por `erasableSyntaxOnly` no `tsconfig.json`). Os pacotes do workspace são carregados por links a partir do profile (link simbólico no Linux e no macOS, *junction* no Windows, que não exige privilégio), e o pnpm deduplica o `@deepseek-ai/cordis` e o `@deepseek-ai/dsh-llm`, de modo que plugins do Agentor e do DSH compartilham as mesmas instâncias.
 

@@ -11,8 +11,9 @@ O ambiente mínimo validado tem o kernel por inclusão, a entrada headless, o se
 | Avaliações (quiz, exercício com rubrica corrigida pelo LLM) | `ctx.assessment`; tools `assessment_start`, `assessment_submit` | `dsh-user-questions`, `dsh-tool-ask-user` |
 | Postura pedagógica (modo socrático: orientar sem entregar a resposta pronta) | Política nos eventos `agent/pre-step` e `tools/pre-execute` | `dsh-persona`, `dsh-agent-preset` (presets tutor, avaliador, mentor) |
 | Relatório para o mentor | `ctx.mentorReport`; geração periódica | `dsh-schedule` |
-| Mais fontes de conhecimento | `@agentor/knowledge-mcp`, `-http`, `-sql` | `dsh-mcp-client` |
-| Busca semântica | Provider com embeddings, mesmo contrato `KnowledgeSource` | — |
+| Leitura integral de documentos das fontes autorizadas | Tool `read_document` sobre `ctx.knowledge.read()`; provider de pasta local primeiro ([especificação](especificacoes/tool-read-document.md)) | — (o `dsh-tool-fs` não confina a leitura; veja a especificação) |
+| Mais fontes de conhecimento | `@agentor/knowledge-onedrive`, `-gdrive`, `-sql`/`-docdb`, `-mcp`, `-http`; busca e leitura com o mesmo contrato, já especificado para leitura | `dsh-mcp-client` |
+| Busca semântica | Provider com embeddings (`@agentor/knowledge-vector`), mesmo contrato `KnowledgeSource`, inclusive a leitura por documento | — |
 
 ## Etapa Web
 

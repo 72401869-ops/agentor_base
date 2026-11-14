@@ -90,7 +90,7 @@ config/                   configuração (sem segredos)
   .env.example            nomes das variáveis de chave, sem valores
 scripts/                  lançador e criação do profile
 tests/                    testes unitários e e2e
-docs/                     arquitetura, clientes, registro de execução, roadmap, entregas
+docs/                     arquitetura, clientes, registro de execução, roadmap, especificações, entregas
 ```
 
 As dependências estão registradas em `package.json` (raiz e pacotes) e travadas em `pnpm-lock.yaml`. Os pacotes do DSH usam **versão exata** (`0.2.2-rc.2`, a mesma avaliada na escolha da base).
@@ -117,6 +117,7 @@ As dependências estão registradas em `package.json` (raiz e pacotes) e travada
 - [docs/clientes.md](docs/clientes.md): como configurar um cliente (LLM, chaves, fontes de conhecimento).
 - [docs/registro-execucao.md](docs/registro-execucao.md): comandos executados, resultados e impedimentos.
 - [docs/roadmap.md](docs/roadmap.md): próximos plugins de treinamento e a etapa Web.
+- [docs/especificacoes/](docs/especificacoes/tool-read-document.md): especificações antes da implementação, começando pela tool `read_document` (leitura de documentos só de fontes autorizadas).
 - [docs/entregas/](docs/entregas/19-ambiente-minimo.md): evidências de cada entrega, por critério de aceite (começando pela #19, ambiente mínimo).
 
 ## Licença
