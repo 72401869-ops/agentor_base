@@ -57,7 +57,7 @@ Registre sistema, versões e resultado em [registro-execucao.md](../registro-exe
 |---|---|
 | Responsável | |
 | Revisor | |
-| Dependências e alternativa com dados simulados | Depende dos pacotes npm do DSH 0.2.2-rc.1. Sem chave de LLM, a alternativa é o adaptador `llm-offline` com os documentos fictícios do cliente `exemplo`. |
+| Dependências e alternativa com dados simulados | Depende dos pacotes npm do DSH 0.2.2-rc.2, a versão avaliada na escolha da base. Sem chave de LLM, a alternativa é o adaptador `llm-offline` com os documentos fictícios do cliente `exemplo`. |
 | Dados utilizados e risco | Somente documentos fictícios. Risco baixo: nenhuma credencial nem dado pessoal no repositório. |
 | Links do artefato, da revisão e da evidência | Commits `a878239` (ambiente mínimo), `dc3240a` (portabilidade Windows), `0593456` (instruções Windows e Linux) e o commit deste documento; [registro de execução](../registro-execucao.md). Revisão: |
 | Horas realizadas | |
@@ -68,5 +68,7 @@ Apenas para referência; nenhum destes itens foi tratado aqui:
 
 - Chamada a um LLM real com pergunta conhecida e sem resposta.
 - CI com testes e busca de segredos.
-- Registro de decisão com licenças (SBOM) e conciliação da versão do DSH usada (0.2.2-rc.1) com a avaliada na escolha da base (0.2.2-rc.2).
+- Registro de decisão com licenças (SBOM).
+
+Resolvido depois da entrega: a versão do DSH usada (0.2.2-rc.1) foi alinhada à avaliada na escolha da base (0.2.2-rc.2) em 14/11/2026 ([registro de execução](../registro-execucao.md)).
 - Especificação e implementação da tool de leitura de arquivo.

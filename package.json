@@ -20,7 +20,7 @@
     "verify": "pnpm typecheck && pnpm test"
   },
   "dependencies": {
-    "@deepseek-ai/dsh": "0.2.2-rc.1"
+    "@deepseek-ai/dsh": "0.2.2-rc.2"
   },
   "devDependencies": {
     "@agentor/bundle-kernel": "workspace:*",
@@ -30,10 +30,10 @@
     "@agentor/llm-offline": "workspace:*",
     "@agentor/tool-knowledge": "workspace:*",
     "@deepseek-ai/cordis": "4.1.0",
-    "@deepseek-ai/dsh-llm": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-system-prompt": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-tool-executor-native": "0.2.2-rc.1",
-    "@deepseek-ai/dsh-tools": "0.2.2-rc.1",
+    "@deepseek-ai/dsh-llm": "0.2.2-rc.2",
+    "@deepseek-ai/dsh-system-prompt": "0.2.2-rc.2",
+    "@deepseek-ai/dsh-tool-executor-native": "0.2.2-rc.2",
+    "@deepseek-ai/dsh-tools": "0.2.2-rc.2",
     "@types/node": "24.19.2",
     "typescript": "7.0.2"
   }

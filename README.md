@@ -93,7 +93,7 @@ tests/                    testes unitários e e2e
 docs/                     arquitetura, clientes, registro de execução, roadmap, entregas
 ```
 
-As dependências estão registradas em `package.json` (raiz e pacotes) e travadas em `pnpm-lock.yaml`. Os pacotes do DSH usam **versão exata** (`0.2.2-rc.1`).
+As dependências estão registradas em `package.json` (raiz e pacotes) e travadas em `pnpm-lock.yaml`. Os pacotes do DSH usam **versão exata** (`0.2.2-rc.2`, a mesma avaliada na escolha da base).
 
 ## Erros conhecidos
 
@@ -106,6 +106,7 @@ As dependências estão registradas em `package.json` (raiz e pacotes) e travada
 | `failed to parse overlay ... cannot resolve a node with !<tag:yaml.org,2002:js> explicit tag` | Expressão `!!js` sem aspas começando com crase ou outro caractere reservado do YAML | Coloque a expressão entre aspas: `root: !!js "process.env.AGENTOR_CLIENT_DIR + '/conhecimento'"`. |
 | `erro: cliente não encontrado: config/clients/<x>/cordis.patch.yml` (código 2) | `--client` aponta para uma pasta que não existe | Crie o cliente a partir de `config/clients/exemplo/` ([docs/clientes.md](docs/clientes.md)). |
 | Aviso do pnpm `Ignored build scripts: ...` (a lista varia por sistema: `@google/genai`, `koffi`, `protobufjs`; no Windows também `node-pty` e `@deepseek-ai/dsh-subprocess-local`) | Dependências transitivas do DSH com scripts de build nativo | Inofensivo: o kernel não usa esses recursos. Não aprove os scripts sem necessidade. |
+| Aviso do pnpm `unmet peer @opentelemetry/api@">=1.x <1.10.0": found 1.10.0`, sob `@deepseek-ai/dsh-otel` | Faixas de peer do OpenTelemetry dentro do pacote de telemetria do DSH | Inofensivo: o `dsh-otel` não faz parte do kernel. Um `unmet peer` de um pacote `@deepseek-ai/dsh-*`, ao contrário, indica versões misturadas do DSH (veja a atualização em [docs/arquitetura.md](docs/arquitetura.md#política-de-versões-do-dsh)). |
 | Git avisa `CRLF will be replaced by LF` (Windows) | Cópia de trabalho criada antes do `.gitattributes`, com `core.autocrlf=true` | Inofensivo: o repositório guarda LF. Um clone novo já vem em LF. |
 | `dsh: skipping profile bundle "@agentor/bundle-kernel": ... is incompatible with dsh <versão>` seguido de `entries did not activate ... pending`; o processo sai com **código 0** e sem resposta | A versão do `@deepseek-ai/dsh` instalada não satisfaz o `engines.dsh` dos pacotes `@agentor/*` | Reinstale a versão travada (`pnpm install --frozen-lockfile`) ou siga o procedimento de atualização em [docs/arquitetura.md](docs/arquitetura.md#política-de-versões-do-dsh). |
 | Uma linha nova no patch parece não ter efeito | Nome de módulo errado: o loader do Cordis registra no logger e não derruba o processo | Confira com `pnpm dump-config --client <x>` e revise a grafia do `name`. |

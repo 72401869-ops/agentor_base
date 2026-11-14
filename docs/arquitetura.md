@@ -95,12 +95,13 @@ Os plugins são TypeScript e rodam sem etapa de build: o Node executa `.ts` com 
 
 ## Política de versões do DSH
 
-- Todos os pacotes `@deepseek-ai/*` usam **versão exata** (`0.2.2-rc.1`), e o `pnpm-lock.yaml` trava a árvore transitiva.
-- Os pacotes `@agentor/*` declaram `"engines": { "dsh": "0.2.2-rc.1" }`. Se o `dsh` instalado não satisfaz essa faixa, o launcher **pula o bundle** e escreve `dsh: skipping profile bundle "@agentor/bundle-kernel": ... is incompatible with dsh <versão>` no stderr. Um `dsh` atualizado sem revisão aparece como aviso explícito, não como comportamento estranho. **Atenção:** testado em 13/11/2026, o processo ainda termina com código 0, sem resposta (os plugins ficam `pending`). Por isso o `pnpm verify` é obrigatório após qualquer mudança de versão: os testes e2e exigem a resposta e falham nesse caso.
+- Todos os pacotes `@deepseek-ai/*` usam **versão exata** (`0.2.2-rc.2`, a versão avaliada na escolha da base: tag `dsh-v0.2.2-rc.2`, commit `ddac9676`), e o `pnpm-lock.yaml` trava a árvore transitiva.
+- Os pacotes `@agentor/*` declaram `"engines": { "dsh": "0.2.2-rc.2" }`. Se o `dsh` instalado não satisfaz essa faixa, o launcher **pula o bundle** e escreve `dsh: skipping profile bundle "@agentor/bundle-kernel": ... is incompatible with dsh <versão>` no stderr. Um `dsh` atualizado sem revisão aparece como aviso explícito, não como comportamento estranho. **Atenção:** testado em 13/11/2026, o processo ainda termina com código 0, sem resposta (os plugins ficam `pending`). Por isso o `pnpm verify` é obrigatório após qualquer mudança de versão: os testes e2e exigem a resposta e falham nesse caso.
 - **Atualizar o DSH:**
   1. Leia o changelog e o `cordis.patch.yml` dos bundles `dsh-sdk-minimal` e `dsh-headless` da nova versão.
   2. Compare com o kernel.
   3. Suba as versões exatas no `package.json` e no `engines.dsh` dos pacotes.
   4. Rode `pnpm install`, depois `pnpm verify` e `pnpm dump-config --client exemplo`.
-  5. Registre o resultado em [registro-execucao.md](registro-execucao.md).
+  5. Confira que o `pnpm-lock.yaml` não ficou com pacotes `@deepseek-ai/*` da versão anterior e que o install não avisou `unmet peer @deepseek-ai/...`. Os pacotes do DSH declaram peers em versão exata, mas o pnpm pode reaproveitar resoluções antigas do lockfile e misturar versões. Se isso acontecer, apague o `pnpm-lock.yaml` **e** os `node_modules` (o pnpm também reaproveita o lockfile interno de `node_modules/.pnpm`) e rode `pnpm install` de novo; depois compare a lista de pacotes de terceiros com a anterior.
+  6. Registre o resultado em [registro-execucao.md](registro-execucao.md).
 - **Referência de código:** sempre consulte os arquivos da **versão instalada** (`node_modules/.pnpm/@deepseek-ai+...`), não o `main` do repositório do DSH. Já há diferenças entre os dois; por exemplo, o `Config` do runner headless.

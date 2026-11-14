@@ -4,8 +4,8 @@
 # listado abaixo de forma explícita; uma atualização do DSH não consegue
 # adicionar plugins a esta árvore sem que alguém edite este arquivo.
 #
-# Fonte de referência: o bundle @deepseek-ai/dsh-sdk-minimal@0.2.2-rc.1 e o
-# runner de @deepseek-ai/dsh-headless@0.2.2-rc.1. Removidos em relação a eles:
+# Fonte de referência: o bundle @deepseek-ai/dsh-sdk-minimal@0.2.2-rc.2 e o
+# runner de @deepseek-ai/dsh-headless@0.2.2-rc.2. Removidos em relação a eles:
 #   - todos os pacotes *-deepseek* (adaptador, extensões de API, log de sessão,
 #     inventário, conta) — o LLM entra por dsh-llm-pi-ai, configurado por cliente;
 #   - shell, terminal, filesystem, sandbox, subprocess e jobs — o estagiário

@@ -11,7 +11,7 @@
   },
   "files": ["cordis.patch.yml"],
   "engines": {
-    "dsh": "0.2.2-rc.1"
+    "dsh": "0.2.2-rc.2"
   },
   "dsh": {
     "bundle": {
