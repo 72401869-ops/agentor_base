@@ -27,12 +27,12 @@
 
 | Campo | Valor |
 |---|---|
-| Responsável | |
+| Responsável | Gabriella Isa Rodrigues Crisostomo|
 | Revisor | Um de cada frente (A, B e C); veja a seção 6 do contrato |
 | Dependências e alternativa com dados simulados | Depende do inventário da #23 (ids das fontes). Usa só os documentos fictícios do cliente `exemplo` |
 | Dados utilizados e risco | Somente documentos fictícios. Risco baixo: nenhum dado pessoal, nenhuma credencial, nenhum código alterado |
 | Links do artefato, da revisão e da evidência | [Contrato](../especificacoes/contrato-de-dados.md); link do PR. Revisão: |
-| Horas realizadas | |
+| Horas realizadas | 1 h |
 
 ## Fora do escopo desta task
 
