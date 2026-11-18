@@ -26,12 +26,12 @@
 
 | Campo | Valor |
 |---|---|
-| Responsável | |
+| Responsável | Gabriella Isa Rodrigues Crisostomo|
 | Revisor | |
 | Dependências e alternativa com dados simulados | Nenhuma dependência: é um documento. Usa só os documentos fictícios já existentes |
 | Dados utilizados e risco | Somente documentos fictícios. Risco baixo: nenhum dado pessoal, nenhuma credencial, nenhum código alterado |
 | Links do artefato, da revisão e da evidência | [Inventário](../fontes/inventario-de-fontes.md); commit deste documento. Revisão: |
-| Horas realizadas | |
+| Horas realizadas | 1 h |
 
 ## Fora do escopo desta task
 
