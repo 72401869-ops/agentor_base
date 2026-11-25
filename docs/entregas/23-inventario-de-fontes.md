@@ -13,14 +13,14 @@
 | # | Critério | Evidência |
 |---|---|---|
 | 1 | Cada fonte tem nome, autoria, origem, finalidade, versão, licença e local de armazenamento | [Seção 1](../fontes/inventario-de-fontes.md#1-fontes-autorizadas): uma coluna por fonte, com os sete campos preenchidos para os dois documentos do cliente `exemplo` |
-| 2 | Os materiais fictícios estão marcados como tal | Campo *Material fictício* = **Sim** nas duas fontes, e a regra 2 ([seção 3](../fontes/inventario-de-fontes.md#3-regras)) exige a marcação também na primeira linha do documento, o que os dois arquivos já fazem |
+| 2 | Os materiais fictícios estão marcados como tal | Campo *Material fictício* = **Sim** nas duas fontes, e a regra 2 ([seção 3](../fontes/inventario-de-fontes.md#3-regras)) exige a marcação também logo abaixo do título do documento, o que os dois arquivos já fazem |
 | 3 | Qualquer dado externo proposto fica pendente até haver autorização registrada | [Seção 2](../fontes/inventario-de-fontes.md#2-fontes-externas-propostas-pendentes): tabela de fontes pendentes, com a coluna de autorização (quem, quando, onde). Nenhuma fonte externa foi proposta até agora. A regra 3 impede o uso antes da autorização |
 
 ## Como foi verificado
 
 - As fontes listadas são todas as que existem em `config/clients/*/conhecimento/` no repositório (só o cliente `exemplo`, com dois arquivos).
-- Autoria, commit e data foram tirados do `git log` de cada arquivo. O tamanho foi conferido com `wc -c`.
-- A marcação "Documento fictício" foi conferida na primeira linha de cada arquivo.
+- Autoria e data foram tiradas do git log de cada arquivo. O hash foi calculado com sha256sum e o tamanho conferido com wc -c.
+- A marcação "Documento fictício" foi conferida logo abaixo do título (linha 3) de cada arquivo.
 
 ## A preencher
 
