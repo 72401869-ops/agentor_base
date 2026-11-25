@@ -31,7 +31,7 @@
 | Revisor | |
 | Dependências e alternativa com dados simulados | R1b depende da tool `read_document` (#41). R2b é opcional e exige LLM real com a chave do testador; sem ela, R2a roda offline. A referência à pendência C2 aponta para o contrato de dados (#24, PR #2) |
 | Dados utilizados e risco | Só dados fictícios e o marcador inventado. Risco baixo: é um documento, e o plano proíbe segredos reais, links para pastas do sistema e commit da pasta de teste |
-| Links do artefato, da revisão e da evidência | [Plano](../especificacoes/riscos-e-testes.md); link do PR. Revisão: |
+| Links do artefato, da revisão e da evidência | [Plano](../especificacoes/riscos-e-testes.md); [link do PR](https://github.com/ProjetosExtensaoCotemig-GenAI-Sec-Cloud/agentor_base/pull/4). Revisão: |
 | Horas realizadas | 2,5 h |
 
 ## Fora do escopo desta task
