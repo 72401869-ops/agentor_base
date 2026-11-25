@@ -2,7 +2,7 @@
 
 Registro de **onde vêm os documentos** que o assistente pode consultar e **em que condições** podem ser usados. Só entra na base de conhecimento de um cliente a fonte que estiver neste inventário com situação **Autorizada**.
 
-Atualizado em: 2026-11-18 (task #23).
+Atualizado em: 2026-11-25 (task #23).
 
 ## 1. Fontes autorizadas
 

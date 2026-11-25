@@ -27,10 +27,10 @@
 | Campo | Valor |
 |---|---|
 | Responsável | Gabriella Isa Rodrigues Crisostomo|
-| Revisor | |
+| Revisor | [Felipe Vandevelde](https://github.com/FelipeVandevelde) (revisão do PR #1) |
 | Dependências e alternativa com dados simulados | Nenhuma dependência: é um documento. Usa só os documentos fictícios já existentes |
 | Dados utilizados e risco | Somente documentos fictícios. Risco baixo: nenhum dado pessoal, nenhuma credencial, nenhum código alterado |
-| Links do artefato, da revisão e da evidência | [Inventário](../fontes/inventario-de-fontes.md); commit deste documento. Revisão: |
+| Links do artefato, da revisão e da evidência | [Inventário](../fontes/inventario-de-fontes.md); commit deste documento. Revisão: [1ª rodada](https://github.com/ProjetosExtensaoCotemig-GenAI-Sec-Cloud/agentor_base/pull/1#pullrequestreview-6055534360) e [2ª rodada](https://github.com/ProjetosExtensaoCotemig-GenAI-Sec-Cloud/agentor_base/pull/1#pullrequestreview-6058972482) |
 | Horas realizadas | 1 h |
 
 ## Fora do escopo desta task
