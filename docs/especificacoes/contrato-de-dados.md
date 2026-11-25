@@ -83,7 +83,7 @@ Para cada fonte que falhou, entra uma linha: `Aviso: a fonte <sourceId> falhou: 
 
 ### 2.3 Exemplos
 
-Os quatro exemplos foram **gerados executando** o provider `@agentor/knowledge-fs` e a função `renderResult` sobre os documentos reais do cliente `exemplo`. Só o campo `query` foi acrescentado, conforme a proposta P1, e o `score` do exemplo A foi arredondado (0,9667 → 0,97).
+Os quatro exemplos foram **gerados executando** o provider `@agentor/knowledge-fs` e a função `renderResult` sobre os documentos reais do cliente `exemplo`. Só três pontos foram ajustados à mão: o campo `query`, acrescentado conforme a proposta P1; o `score` do exemplo A, arredondado (0,9667 → 0,97); e a mensagem de falha do exemplo D, que mostra o texto esperado pelo contrato (pendência C2).
 
 **Exemplo A — com resultado**
 
@@ -209,7 +209,7 @@ O mesmo par (`sourceId`, `documentId`) é a entrada da futura tool `read_documen
 | P1 | Incluir `query` no resultado de busca (seção 2.1) | A decidir |
 | P2 | Incluir `sourceId` no objeto documento, que não existe no `KnowledgeDocument` da #20 (seção 1). Decidir antes da #41 | A decidir |
 | P3 | Confirmar a escala de `score` de 0 a 1 para os próximos providers. A pasta local já segue essa escala | A decidir |
-| — | Versão na pasta local: data + hash do conteúdo | **Decidida** pela regra 5 do inventário de fontes (revisão do PR #1) |
+| — | Versão na pasta local: data + hash do conteúdo | A decidir (a regra 5 do inventário de fontes já usa esse formato) |
 
 ### 5.2 Pendências de código (fora do escopo desta task)
 
